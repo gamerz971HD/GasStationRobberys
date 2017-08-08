@@ -9,13 +9,11 @@
 
 
 */
-private ["_robber","_shop","_kassa","_ui","_pgText","_progress","_cP","_rip","_action","_shopName"];
+private ["_robber","_shop","_kassa","_ui","_pgText","_progress","_cP","_rip","_action"];
 
 _shop = [_this,0,ObjNull,[ObjNull]] call BIS_fnc_param;
 _robber = [_this,1,ObjNull,[ObjNull]] call BIS_fnc_param;
 _action = [_this,2] call BIS_fnc_param;
-_shopName = [_this select,3,0,"",[""]] call BIS_fnc_param;
-
 if(side _robber !=civilian) exitWith {hint "You need to be a civilian to rob this shop.";};
 if(_robber distance _shop > 3) exitWith {hint "You need to stay within 3m to rob this shop";};
 if (vehicle player !=_robber) exitWith {hint "You need to be out of your vehicle first!";};
@@ -30,7 +28,7 @@ _shop removeAction _action;
 _chance = random(100);
 
 if(_chance >=60) then {
-[1,format["000 ALERT:\n\n%1 is being robbed by %2",_shop,_robber, name _robber]] remoteExec ["life_fnc_broadcast",west]
+[1,format["000 ALERT:\n\nA gas station is being robbed by %2",_robber, name _robber]] remoteExec ["life_fnc_broadcast",west]
 };
 
 disableSerialization;
@@ -70,7 +68,7 @@ if(_rip) then
         if(_robber distance _shop > 3.5) exitWith {
         hint "You need to stay within 3m to rob this shop! Cash register is now locked, and police have been notified!";
          5 cutText ["","PLAIN"];
-        [1,format["%1 attempted to rob %2!",_robber,name _robber, _shop]] remoteExec ["life_fnc_broadcast",west];
+        [1,format["%1 attempted to rob a gas station!",_robber,name _robber]] remoteExec ["life_fnc_broadcast",west];
         [getPlayerUID _robber, _robber getVariable ["realname",name _robber], "211"] remoteExecCall ["life_fnc_wantedAdd", RSERV];
         };
         5 cutText ["","PLAIN"];
@@ -82,7 +80,7 @@ if(_rip) then
         life_use_atm = false;
         playSound3D ["A3\Sounds_F\sfx\alarm_independent.wss", _robber];
         sleep 25;
-        [1, format["Altis News Corp: Gas Staion %1 was robbed for a total of $%2",_shopName, [_kassa] call life_fnc_numberText]] remoteExec ["life_fnc_broadcast", civilian];
+        [1, format["Altis News Corp: A gas staion was recently robbed for a total of $%2", [_kassa] call life_fnc_numberText]] remoteExec ["life_fnc_broadcast", civilian];
         sleep ((LIFE_SETTINGS(getNumber,"noatm_timer")) * 60);
         life_use_atm = true;
         _shop addAction
